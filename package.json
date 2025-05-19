@@ -1,12 +1,19 @@
 {
+<<<<<<< HEAD
   "name": "sugoiapi-render",
+=======
+  "name": "sugoiapi",
+>>>>>>> a9f5b305273e669cee60613c6d6e4f12bc2d53e4
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
+<<<<<<< HEAD
     "cors": "^2.8.5",
+=======
+>>>>>>> a9f5b305273e669cee60613c6d6e4f12bc2d53e4
     "express": "^4.18.2"
   }
 }
