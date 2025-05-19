@@ -3,7 +3,7 @@ const Sugoi = require("./src/Scraper/scraper");
 const cors = require("cors");
 
 const app = express();
-const port = process.env.PORT || 1000;
+const port = process.env.PORT || 10000;
 
 app.use(cors());
 
