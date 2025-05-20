@@ -1,79 +1,36 @@
 const express = require("express");
+const cors = require("cors");
+const Sugoi = require("./src/scraper");
+
 const app = express();
-
-// Dados simulados
-const animes = [
-  {
-    id: "1",
-    title: "Naruto",
-    image: "https://cdn.sugoiapi.dev/naruto.jpg",
-    description: "Um ninja que quer ser Hokage"
-  },
-  {
-    id: "2",
-    title: "Attack on Titan",
-    image: "https://cdn.sugoiapi.dev/aot.jpg",
-    description: "Humanos vs Tit茫s"
-  }
-];
-
-const episodes = {
-  "1": [
-    { id: "ep1", title: "Naruto Epis贸dio 1", videoUrl: "https://cdn.sugoiapi.dev/player/naruto-ep1.mp4" },
-    { id: "ep2", title: "Naruto Epis贸dio 2", videoUrl: "https://cdn.sugoiapi.dev/player/naruto-ep2.mp4" }
-  ],
-  "2": [
-    { id: "ep1", title: "AoT Epis贸dio 1", videoUrl: "https://cdn.sugoiapi.dev/player/aot-ep1.mp4" }
-  ]
-};
-
-// Middleware
-app.use(express.json());
-
-// Rota raiz
-app.get("/", (req, res) => {
-  res.send("馃殌 SugoiAPI est谩 rodando!");
-});
-
-// Lista todos os animes
-app.get("/animes", (req, res) => {
-  res.json(animes);
-});
-
-// Retorna um anime por ID
-app.get("/animes/:id", (req, res) => {
-  const anime = animes.find(a => a.id === req.params.id);
-  if (anime) return res.json(anime);
-  res.status(404).json({ message: "Anime n茫o encontrado" });
-});
-
-// Busca animes por nome
-app.get("/search", (req, res) => {
-  const q = req.query.q?.toLowerCase() || "";
-  const resultado = animes.filter(anime =>
-    anime.title.toLowerCase().includes(q)
-  );
-  res.json(resultado);
-});
-
-// Retorna epis贸dios de um anime
-app.get("/animes/:id/episodes", (req, res) => {
-  const ep = episodes[req.params.id];
-  if (ep) return res.json(ep);
-  res.status(404).json({ message: "Epis贸dios n茫o encontrados" });
-});
-
-// Detalhes de um epis贸dio
-app.get("/episodes/:id", (req, res) => {
-  for (const eps of Object.values(episodes)) {
-    const ep = eps.find(e => e.id === req.params.id);
-    if (ep) return res.json(ep);
-  }
-  res.status(404).json({ message: "Epis贸dio n茫o encontrado" });
-});
-
-// Inicializa莽茫o do servidor
 const PORT = process.env.PORT || 10000;
+
+app.use(cors());
+
+app.get("/", (req, res) => {
+  res.send("?? SugoiAPI com banco de dados local funcionando!");
+});
+
+app.get("/search", async (req, res) => {
+  const q = req.query.q;
+  const result = await Sugoi.search(q || "");
+  res.json(result);
+});
+
+app.get("/anime/:id", async (req, res) => {
+  const anime = await Sugoi.getAnime(req.params.id);
+  if (!anime) return res.status(404).json({ error: "Anime n?o encontrado" });
+
+  res.json(anime);
+});
+
+app.get("/watch/:id", async (req, res) => {
+  const ep = await Sugoi.getEpisode(req.params.id);
+  if (!ep) return res.status(404).json({ error: "Episódio n?o encontrado" });
+
+  res.json(ep);
+});
+
 app.listen(PORT, () => {
-  console.log(`SugoiAPI rodando na porta ${PORT}`);
+  console.log(`? SugoiAPI rodando na porta ${PORT}`);
 });
