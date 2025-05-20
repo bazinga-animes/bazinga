@@ -1,17 +1,12 @@
-const { JSONFile, Low } = require('lowdb');
+const low = require('lowdb');
+const FileSync = require('lowdb/adapters/FileSync');
 const path = require('path');
 
 const file = path.join(__dirname, 'db.json');
-const adapter = new JSONFile(file);
-const db = new Low(adapter);
+const adapter = new FileSync(file);
+const db = low(adapter);
 
-// Inicializa o banco
-async function initDB() {
-  await db.read();
-  db.data ||= { animes: [] };
-  await db.write();
-}
-
-initDB();
+// Inicializa
+db.defaults({ animes: [] }).write();
 
 module.exports = db;
