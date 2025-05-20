@@ -1,0 +1,15 @@
+{
+  "animes": [
+    {
+      "id": "naruto",
+      "title": "Naruto",
+      "episodes": [
+        {
+          "id": "naruto-episodio-1",
+          "title": "Episódio 1",
+          "video": "https://cdn.superanimes.tv/010/animes/n/naruto-classico-dublado/01.mp4"
+        }
+      ]
+    }
+  ]
+}
